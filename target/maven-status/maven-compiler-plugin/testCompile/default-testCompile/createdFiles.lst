@@ -1,0 +1,3 @@
+com\example\voting\integration\ServiceIntegrationTest.class
+com\example\voting\service\UserServiceTest.class
+com\example\voting\service\VoteServiceTest.class
