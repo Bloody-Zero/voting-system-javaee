@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
 <div class="container">
     <header>
         <div class="user-info">
-            <h1>Голосование: ${vote.title}</h1>
+            <h1>📋 Просмотр голосования</h1>
             <div class="user-badge">
                 👤 ${userName}
                 <span class="role">${userRole eq 'ADMIN' ? '🔑 Администратор' : '👤 Пользователь'}</span>
@@ -31,45 +31,83 @@
             </ul>
         </nav>
     </header>
+
     <main>
+        <div class="page-title">
+            <h2>${vote.title}</h2>
+        </div>
+
         <div class="detail-card">
-            <p><strong>ID:</strong> ${vote.id}</p>
-            <p><strong>Название:</strong> ${vote.title}</p>
-            <p><strong>Дата начала:</strong> ${vote.dateStartFormatted}</p>
-            <p><strong>Дата окончания:</strong> ${vote.dateFinishFormatted}</p>
-            <p><strong>Статус:</strong>
-                <span class="status ${vote.status eq 'ACTIVE' ? 'active' : 'finished'}">
+            <p>
+                <span>🆔</span>
+                <strong>ID:</strong> ${vote.id}
+            </p>
+            <p>
+                <span>📅</span>
+                <strong>Дата начала:</strong> ${vote.dateStartFormatted}
+            </p>
+            <p>
+                <span>📅</span>
+                <strong>Дата окончания:</strong> ${vote.dateFinishFormatted}
+            </p>
+            <p>
+                <span>📊</span>
+                <strong>Статус:</strong>
+                <span class="status ${vote.status eq 'ACTIVE' ? 'active' : vote.status eq 'COMPLETED' ? 'finished' : ''}">
                     <c:choose>
-                        <c:when test="${vote.status == 'ACTIVE'}">Активно</c:when>
-                        <c:when test="${vote.status == 'COMPLETED'}">Завершено</c:when>
-                        <c:when test="${vote.status == 'DRAFT'}">Черновик</c:when>
+                        <c:when test="${vote.status == 'ACTIVE'}">🟢 Активно</c:when>
+                        <c:when test="${vote.status == 'COMPLETED'}">⚫ Завершено</c:when>
+                        <c:when test="${vote.status == 'DRAFT'}">🟡 Черновик</c:when>
                         <c:otherwise>${vote.status}</c:otherwise>
                     </c:choose>
                 </span>
             </p>
         </div>
 
-        <h2>Вопросы в этом голосовании</h2>
-        <c:if test="${empty vote.questions}">
-            <p>Нет вопросов</p>
-        </c:if>
-        <c:forEach var="question" items="${vote.questions}">
-            <div class="question-item">
-                <p><strong>${question.content}</strong></p>
-                <p>Дата: ${question.dateVoteFormatted}</p>
-                <a href="${pageContext.request.contextPath}/question/view/${question.id}" class="btn small">Подробнее</a>
-            </div>
-        </c:forEach>
+        <section>
+            <h2 class="section-title">Вопросы в голосовании (${fn:length(vote.questions)})</h2>
+            
+            <c:if test="${empty vote.questions}">
+                <div class="empty-state">
+                    <div class="empty-icon">❓</div>
+                    <h3>Нет вопросов</h3>
+                    <p>В этом голосовании ещё не добавлено ни одного вопроса</p>
+                </div>
+            </c:if>
+
+            <c:forEach var="question" items="${vote.questions}">
+                <div class="vote-card">
+                    <h3>${question.content}</h3>
+                    <p>📅 Дата: ${question.dateVoteFormatted}</p>
+                    <div style="margin-top: 0.75rem;">
+                        <a href="${pageContext.request.contextPath}/question/view/${question.id}" class="btn small btn-primary">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+            </c:forEach>
+        </section>
 
         <div class="actions">
             <c:if test="${userRole eq 'ADMIN'}">
-                <a href="${pageContext.request.contextPath}/vote/edit/${vote.id}" class="btn">Редактировать</a>
-                <a href="${pageContext.request.contextPath}/vote/delete/${vote.id}" class="btn danger"
-                   onclick="return confirm('Удалить голосование?')">Удалить</a>
+                <a href="${pageContext.request.contextPath}/vote/edit/${vote.id}" class="btn btn-primary">
+                    <span>✏️</span> Редактировать
+                </a>
+                <a href="${pageContext.request.contextPath}/vote/delete/${vote.id}" class="btn btn-danger"
+                   onclick="return confirm('Удалить голосование?')">
+                    <span>🗑️</span> Удалить
+                </a>
             </c:if>
-            <a href="${pageContext.request.contextPath}/vote" class="btn">К списку</a>
+            <a href="${pageContext.request.contextPath}/vote" class="btn btn-outline">
+                <span>←</span> К списку
+            </a>
         </div>
     </main>
+
+    <footer>
+        <p>&copy; 2026 Система голосования. Курсовой проект по Java EE.</p>
+    </footer>
 </div>
+<script src="${pageContext.request.contextPath}/js/main.js"></script>
 </body>
 </html>

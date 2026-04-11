@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
-Class-Path: 
+Created-By: Maven WAR Plugin 3.4.0
+Build-Jdk-Spec: 21
 

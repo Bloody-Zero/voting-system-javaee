@@ -1,3 +1,9 @@
+com\example\voting\service\QuestionServiceTest.class
+com\example\voting\controller\VoteControllerTest.class
 com\example\voting\integration\ServiceIntegrationTest.class
+com\example\voting\util\ValidationUtilTest.class
 com\example\voting\service\UserServiceTest.class
+com\example\voting\service\ChoiceServiceTest.class
+com\example\voting\controller\UserControllerTest.class
+com\example\voting\entity\EntityTest.class
 com\example\voting\service\VoteServiceTest.class

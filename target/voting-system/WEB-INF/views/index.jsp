@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +20,8 @@
         </div>
         <nav>
             <ul>
-                <li><a href="${pageContext.request.contextPath}/">🏠 Главная</a></li>
+                <li><a href="${pageContext.request.contextPath}/" class="active">🏠 Главная</a></li>
+                <li><a href="${pageContext.request.contextPath}/votePage">🗳️ Голосовать</a></li>
                 <li><a href="${pageContext.request.contextPath}/vote">📋 Голосования</a></li>
                 <c:if test="${userRole eq 'ADMIN'}">
                     <li><a href="${pageContext.request.contextPath}/question">❓ Вопросы</a></li>
@@ -33,42 +34,61 @@
     </header>
 
     <main>
+        <div class="page-title">
+            <h2>Панель управления</h2>
+            <p>Обзор системы голосования и статистика</p>
+        </div>
+
         <section class="stats">
-            <h2>Статистика системы</h2>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h3>📋 Голосования</h3>
+                    <div class="stat-icon">📋</div>
+                    <h3>Голосования</h3>
                     <p class="stat-number">${totalVotes}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>👥 Пользователи</h3>
+                    <div class="stat-icon">👥</div>
+                    <h3>Пользователи</h3>
                     <p class="stat-number">${totalUsers}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>❓ Вопросы</h3>
+                    <div class="stat-icon">❓</div>
+                    <h3>Вопросы</h3>
                     <p class="stat-number">${totalQuestions}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>🗳️ Голоса</h3>
+                    <div class="stat-icon">🗳️</div>
+                    <h3>Голоса</h3>
                     <p class="stat-number">${totalChoices}</p>
                 </div>
             </div>
         </section>
 
         <section class="active-votes">
-            <h2>Активные голосования</h2>
+            <div class="actions">
+                <h2 class="section-title" style="margin: 0;">Активные голосования</h2>
+            </div>
             <c:if test="${empty activeVotes}">
-                <div class="detail-card" style="text-align:center; color:#6c757d;">
-                    <p>Нет активных голосований</p>
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3>Нет активных голосований</h3>
+                    <p>В данный момент нет голосований, в которых можно принять участие.</p>
+                    <c:if test="${userRole eq 'ADMIN'}">
+                        <a href="${pageContext.request.contextPath}/vote/form" class="btn btn-primary">
+                            <span>➕</span> Создать голосование
+                        </a>
+                    </c:if>
                 </div>
             </c:if>
             <c:forEach var="vote" items="${activeVotes}">
                 <div class="vote-card">
                     <h3>${vote.title}</h3>
-                    <p>📅 Начало: ${vote.dateStartFormatted}</p>
-                    <p>📅 Окончание: ${vote.dateFinishFormatted}</p>
-                    <div style="margin-top:0.8rem;">
-                        <a href="${pageContext.request.contextPath}/vote/view/${vote.id}" class="btn btn-primary">Подробнее</a>
+                    <p>📅 <strong>Начало:</strong> ${vote.dateStartFormatted}</p>
+                    <p>📅 <strong>Окончание:</strong> ${vote.dateFinishFormatted}</p>
+                    <div style="margin-top: 1rem;">
+                        <a href="${pageContext.request.contextPath}/vote/view/${vote.id}" class="btn btn-primary small">
+                            Подробнее →
+                        </a>
                     </div>
                 </div>
             </c:forEach>

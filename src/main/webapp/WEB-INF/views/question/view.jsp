@@ -1,7 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,7 @@
 <div class="container">
     <header>
         <div class="user-info">
-            <h1>Вопрос</h1>
+            <h1>❓ Просмотр вопроса</h1>
             <div class="user-badge">
                 👤 ${userName}
                 <span class="role">${userRole eq 'ADMIN' ? '🔑 Администратор' : '👤 Пользователь'}</span>
@@ -31,31 +32,73 @@
             </ul>
         </nav>
     </header>
+
     <main>
-        <div class="detail-card">
-            <p><strong>ID:</strong> ${question.id}</p>
-            <p><strong>Голосование:</strong> ${question.vote.title}</p>
-            <p><strong>Содержание:</strong> ${question.content}</p>
-            <p><strong>Дата:</strong> ${question.dateVoteFormatted}</p>
+        <div class="page-title">
+            <h2>Информация о вопросе</h2>
         </div>
 
-        <h2>Результаты по этому вопросу</h2>
-        <c:if test="${empty question.choices}">
-            <p>Нет голосов</p>
-        </c:if>
-        <c:forEach var="choice" items="${question.choices}">
-            <div class="choice-item">
-                <p><strong>${choice.user.fullName}</strong>: ${choice.choiceUser}</p>
-            </div>
-        </c:forEach>
+        <div class="detail-card">
+            <p>
+                <span>🆔</span>
+                <strong>ID:</strong> ${question.id}
+            </p>
+            <p>
+                <span>📋</span>
+                <strong>Голосование:</strong>
+                <span class="tag primary">${question.vote.title}</span>
+            </p>
+            <p>
+                <span>📝</span>
+                <strong>Содержание:</strong><br>
+                <span style="margin-left: 28px; color: var(--gray-700);">${question.content}</span>
+            </p>
+            <p>
+                <span>📅</span>
+                <strong>Дата:</strong> ${question.dateVoteFormatted}
+            </p>
+        </div>
 
-        <div class="form-actions">
-            <c:if test="${userRole eq 'ADMIN'}">
-                <a href="${pageContext.request.contextPath}/question/edit/${question.id}" class="btn">Редактировать</a>
+        <section>
+            <h2 class="section-title">Результаты голосования (${fn:length(question.choices)})</h2>
+            
+            <c:if test="${empty question.choices}">
+                <div class="empty-state">
+                    <div class="empty-icon">🗳️</div>
+                    <h3>Нет голосов</h3>
+                    <p>По этому вопросу ещё не было голосований</p>
+                </div>
             </c:if>
-            <a href="${pageContext.request.contextPath}/question" class="btn btn-secondary">К списку</a>
+
+            <c:forEach var="choice" items="${question.choices}">
+                <div class="choice-item">
+                    <div class="flex items-center gap-md">
+                        <div class="avatar">${choice.user.fullName.substring(0, 1)}</div>
+                        <div>
+                            <p class="font-bold mb-sm">${choice.user.fullName}</p>
+                            <p class="text-muted text-sm">${choice.choiceUser}</p>
+                        </div>
+                    </div>
+                </div>
+            </c:forEach>
+        </section>
+
+        <div class="actions">
+            <c:if test="${userRole eq 'ADMIN'}">
+                <a href="${pageContext.request.contextPath}/question/edit/${question.id}" class="btn btn-primary">
+                    <span>✏️</span> Редактировать
+                </a>
+            </c:if>
+            <a href="${pageContext.request.contextPath}/question" class="btn btn-outline">
+                <span>←</span> К списку
+            </a>
         </div>
     </main>
+
+    <footer>
+        <p>&copy; 2026 Система голосования. Курсовой проект по Java EE.</p>
+    </footer>
 </div>
+<script src="${pageContext.request.contextPath}/js/main.js"></script>
 </body>
 </html>

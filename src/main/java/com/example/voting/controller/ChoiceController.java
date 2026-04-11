@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -97,8 +98,13 @@ public class ChoiceController extends HttpServlet {
 
             case "vote":
                 // Форма голосования для обычного пользователя
-                Long currentUserId = (Long) request.getSession().getAttribute("userId");
-                User currentUser = (User) request.getSession().getAttribute("user");
+                HttpSession session = request.getSession(false);
+                if (session == null || session.getAttribute("userId") == null) {
+                    response.sendRedirect(request.getContextPath() + "/login");
+                    return;
+                }
+                Long currentUserId = (Long) session.getAttribute("userId");
+                User currentUser = (User) session.getAttribute("user");
 
                 // Получаем все вопросы
                 List<Question> allQuestions = questionService.getAllQuestions();

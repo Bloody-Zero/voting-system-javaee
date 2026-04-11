@@ -28,6 +28,12 @@ public class Question {
         if (dateVote == null) return "";
         return dateVote.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
+
+    public String getDateVoteForInput() {
+        if (dateVote == null) return "";
+        return dateVote.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+    }
+
     public Question() {}
 
     public Question(Vote vote, String content, LocalDateTime dateVote) {
